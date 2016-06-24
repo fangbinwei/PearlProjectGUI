@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,10 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import libsvmAPI.*;
+
 /**
  * @author FangBinwei
  */
 public class GridBagWindow extends JFrame {
+	public static int flag=0;
 
     public GridBagWindow() {
     	setTitle("珍珠自动分级系统");
@@ -44,7 +48,7 @@ public class GridBagWindow extends JFrame {
 
         jButton1.setFont(new java.awt.Font("宋体", 1, 18));
         jButton1.setText("将珍珠分成两类");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -62,8 +66,8 @@ public class GridBagWindow extends JFrame {
         getContentPane().add(jButton1, gridBagConstraints);
 
         jButton2.setFont(new java.awt.Font("宋体", 1, 18)); 
-        jButton2.setText("将珍珠分为四类");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton2.setText("将珍珠分成四类");
+        jButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
@@ -81,8 +85,8 @@ public class GridBagWindow extends JFrame {
         getContentPane().add(jButton2, gridBagConstraints);
 
         jButton3.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
-        jButton3.setText("将珍珠分为八类");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("将珍珠分成八类");
+        jButton3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
@@ -103,10 +107,11 @@ public class GridBagWindow extends JFrame {
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jTextArea1.setFont(new java.awt.Font("宋体", 1, 18));
+        jTextArea1.setEditable(false);
         jScrollPane1.setViewportView(jTextArea1);
 
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 7;
         gridBagConstraints.gridheight = 3;
@@ -118,6 +123,11 @@ public class GridBagWindow extends JFrame {
 
         jButton4.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
         jButton4.setText("开始分类");
+        jButton4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 9;
@@ -132,10 +142,11 @@ public class GridBagWindow extends JFrame {
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jTextArea2.setFont(new java.awt.Font("宋体", 1, 18));
+        jTextArea2.setEditable(false);
         jScrollPane2.setViewportView(jTextArea2);
 
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 3;
@@ -174,12 +185,14 @@ public class GridBagWindow extends JFrame {
         pack();
     }                       
 
-    private void jButton1ActionPerformed(ActionEvent evt) {                                         
+    private void jButton1ActionPerformed(ActionEvent evt) { 
+    	flag=2;
         jTextArea2.setText("第1类："+"\n"+"8点差米型"+"\n"+"8点二档冲头"+"\n"+"8点高档米珠"+"\n"+"8点中档米珠"+"\n\n"
 				+ "第2类："+"\n"+"8点短螺纹"+"\n"+"8点高档颗头螺纹"+"\n"+"8点高档面光"+"\n"+"10点四面光");
     }                                        
 
-    private void jButton2ActionPerformed(ActionEvent evt) {  
+    private void jButton2ActionPerformed(ActionEvent evt) { 
+    	flag=4;
     	jTextArea2.setText("第3类："+"\n"+"8点差米型"+"\n"+"8点高档米珠"+"\n"+"8点中档米珠"+"\n\n"
 				+ "第4类："+"\n"+"8点二档冲头"+"\n\n"
 				+"第5类："+"\n"+"8点短螺纹"+"\n"+"8点高档面光"+"\n\n"
@@ -188,7 +201,45 @@ public class GridBagWindow extends JFrame {
     } 
     private void jButton3ActionPerformed(ActionEvent evt) {                                         
         
-    }                                        
+    }         
+    
+    private void jButton4ActionPerformed(ActionEvent evt) {
+    	if(flag==0){
+    		JOptionPane.showMessageDialog(null, "请确定将珍珠分成几类","提示", JOptionPane.WARNING_MESSAGE);
+    		
+    	}
+    	if(flag==2){
+    		
+    		int result=JOptionPane.showConfirmDialog(null,"是否确定将珍珠分成两类","提示", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+    		System.out.println(result);
+    		//click yes
+    		if(result==0){
+    			String modelFile = "normalTrainData.model";
+    			String[] testArgs = {"DataSet/train/ForModel/normalTestData", modelFile, "DataSet/train/ForModel/result"};//directory of test file, model file, result file
+    			Double accuracy;
+				try {
+					accuracy = svm_predict.main(testArgs);
+					System.out.println("SVM Classification is done! The accuracy is " + accuracy);
+					jTextArea1.setText("分类的珍珠数量为"+svm_predict.getTotal()+"颗\n"+
+					"分类正确的数量为"+svm_predict.getCorrect()+"颗\n"+
+							"正确率为"+accuracy*100+"%");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			
+    		}
+    		//click no
+    		if(result==1){
+    			
+    		}
+    	}
+    	if(flag==4){
+    		
+    		int result=JOptionPane.showConfirmDialog(null,"是否确定将珍珠分成四类","提示", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+    		System.out.println(result);
+    	}
+    }   
 
     /**
     * @param args the command line arguments
