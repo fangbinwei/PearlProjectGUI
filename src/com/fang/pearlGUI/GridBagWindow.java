@@ -46,7 +46,7 @@ public class GridBagWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);;
         getContentPane().setLayout(new GridBagLayout());
 
-        jButton1.setFont(new java.awt.Font("宋体", 1, 18));
+        jButton1.setFont(new java.awt.Font("宋体", 1, 24));
         jButton1.setText("将珍珠分成两类");
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -65,7 +65,7 @@ public class GridBagWindow extends JFrame {
         gridBagConstraints.insets = new Insets(30, 30, 30, 30);
         getContentPane().add(jButton1, gridBagConstraints);
 
-        jButton2.setFont(new java.awt.Font("宋体", 1, 18)); 
+        jButton2.setFont(new java.awt.Font("宋体", 1, 24)); 
         jButton2.setText("将珍珠分成四类");
         jButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -84,7 +84,7 @@ public class GridBagWindow extends JFrame {
         gridBagConstraints.insets = new Insets(30, 30, 30, 30);
         getContentPane().add(jButton2, gridBagConstraints);
 
-        jButton3.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
+        jButton3.setFont(new java.awt.Font("宋体", 1, 24)); // NOI18N
         jButton3.setText("将珍珠分成八类");
         jButton3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -121,7 +121,7 @@ public class GridBagWindow extends JFrame {
         gridBagConstraints.insets = new Insets(30, 30, 30, 30);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
-        jButton4.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
+        jButton4.setFont(new java.awt.Font("宋体", 1, 24)); 
         jButton4.setText("开始分类");
         jButton4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -221,6 +221,7 @@ public class GridBagWindow extends JFrame {
 					accuracy = svm_predict.main(testArgs);
 					System.out.println("SVM Classification is done! The accuracy is " + accuracy);
 					jTextArea1.setText("分类的珍珠数量为"+svm_predict.getTotal()+"颗\n"+
+					"分成两类"+"\n"+
 					"分类正确的数量为"+svm_predict.getCorrect()+"颗\n"+
 							"正确率为"+accuracy*100+"%");
 				} catch (IOException e) {

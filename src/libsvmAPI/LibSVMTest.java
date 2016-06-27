@@ -6,10 +6,9 @@ import libsvm.*;
 public class LibSVMTest {
 
 	/**JAVA test code for LibSVM
-	 * @author yangliu
+	 * @author Fang Binwei
 	 * @throws IOException 
-	 * @blog http://blog.csdn.net/yangliuy
-	 * @mail yang.liu@pku.edu.cn
+
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
